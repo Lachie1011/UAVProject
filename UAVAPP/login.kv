@@ -1,0 +1,38 @@
+Screen:
+	
+	MDTextField:
+		
+		id: ipAddress
+		
+		hint_text: "drone ip"
+
+		size_hint_x: None
+		size_hint_y: None
+
+		height: 30
+		width: 200
+		pos_hint: {"center_x": .5, "center_y": .55}
+
+		on_text_validate: app.ip_validate(ipAddress.text)
+
+
+	MDSpinner:
+
+		id: spinnerIP
+
+        size_hint: None, None
+        size: dp(20), dp(20)
+        pos_hint: {'center_x': .5, 'center_y': .45}
+        
+        active: False
+
+    MDLabel:
+
+    	id: timeLbl
+
+    	text: "I am here"
+		theme_text_color: "Hint"
+		font_size: ipAddress.font_size
+		font_size: ipAddress.font_size
+
+		pos_hint: {'center_x': 0.52, 'center_y': 0.95}
