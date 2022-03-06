@@ -1,15 +1,22 @@
+#!/usr/bin/env python3.9
+
+# adding sub-modules
+import sys
+sys.path.append('../')
+
 # libraries
 import socket
-import subprocess
 import threading 
+import subprocess
 from kivymd.app import MDApp
 from kivy.clock import Clock
 from kivy.lang import Builder
 from datetime import datetime
 
+from Networking.GCSPublisher import GCSPublisher
+
 # some config 
 #Config.set('kivy','window_icon','path/to/icon.ico')
-
 
 # class - loginApp - initial entry for GCS - checks IP, connects to and launch control functionality
 class loginApp(MDApp):
@@ -41,6 +48,11 @@ class loginApp(MDApp):
 
 		return Builder.load_file('login.kv') 
 
+	# ADC threading
+	def controlThread(self, name):
+		# opening connection to drone
+		gcsPublisher = GCSPublisher(self.root.ids.ipAddress.text)
+
 	# on ip text field validation
 	def	ip_validate(self, text):
 
@@ -49,12 +61,17 @@ class loginApp(MDApp):
 		validIP = self.checkIP(self.root.ids.ipAddress.text)
 
 		if(not validIP):
-
 			self.root.ids.spinnerIP.active = False
+			self.root.ids.ipAddress.text = ""
 			return
+		#self.root.ids.spinnerIP.active = False
 
-		# opening connection to drone
-
+		# Create thread for networking and control 
+		try:
+   			t1 = threading.Thread(target=self.controlThread, args=("",))
+   			t1.start()
+		except:
+   			print ("Error: unable to start thread")
 
 	# checking the ip address
 	def checkIP(self, text):
