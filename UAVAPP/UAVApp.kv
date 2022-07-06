@@ -1,9 +1,16 @@
-Screen:
-	
+
+WindowManager:
+	LoginWindow:
+	MainWindow: 
+
+
+<LoginWindow>:
+	name: "Login"
+
 	MDTextField:
 		
 		id: ipAddress
-		
+
 		hint_text: "drone ip"
 
 		size_hint_x: None
@@ -33,6 +40,25 @@ Screen:
     	text: "I am here"
 		theme_text_color: "Hint"
 		font_size: ipAddress.font_size
-		font_size: ipAddress.font_size
 
 		pos_hint: {'center_x': 0.52, 'center_y': 0.95}
+
+
+<MainWindow>
+
+	name: "Main"
+
+    MDLabel:
+
+    	id: timeLbl
+
+    	text: "I am here"
+		theme_text_color: "Hint"
+
+		pos_hint: {'center_x': 0.52, 'center_y': 0.95}
+
+	Image:
+
+		id: imageFrame
+		
+		source: "images/noSignal.jpg"

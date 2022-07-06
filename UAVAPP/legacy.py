@@ -1,28 +1,5 @@
-#!/usr/bin/env python3.9
-
-# adding sub-modules
-import sys
-sys.path.append('../')
-
-# libraries
-import socket
-import threading 
-import subprocess
-from kivymd.app import MDApp
-from kivy.clock import Clock
-from kivy.lang import Builder
-from datetime import datetime
-
-from Networking.GCSPublisher import GCSPublisher
-
-# some config 
-#Config.set('kivy','window_icon','path/to/icon.ico')
-
-# class - loginApp - initial entry for GCS - checks IP, connects to and launch control functionality
-class loginApp(MDApp):
-
-	# title name to ""
-	title = ""
+# class - UAVApp
+class UAVApp(MDApp):
 
 	# a function to update the time label
 	def time_function(self, dt):
@@ -33,11 +10,6 @@ class loginApp(MDApp):
 
 		self.root.ids.timeLbl.text = current_time
 
-	# function to connect to drone
-	def hello_drone(self):
-
-		print("connected to drone!")
-
 	# builds the application
 	def build(self):
 		
@@ -46,7 +18,7 @@ class loginApp(MDApp):
 
 		Clock.schedule_interval(self.time_function, 1)
 
-		return Builder.load_file('login.kv') 
+		return Builder.load_file('UAVApp.kv') 
 
 	# ADC threading
 	def controlThread(self, name):
@@ -64,14 +36,18 @@ class loginApp(MDApp):
 			self.root.ids.spinnerIP.active = False
 			self.root.ids.ipAddress.text = ""
 			return
-		#self.root.ids.spinnerIP.active = False
+		self.root.ids.spinnerIP.active = False
+
+		# close the application 
+		loginApp().stop()
 
 		# Create thread for networking and control 
-		try:
-   			t1 = threading.Thread(target=self.controlThread, args=("",))
-   			t1.start()
-		except:
-   			print ("Error: unable to start thread")
+		#try:
+   			#t1 = threading.Thread(target=self.controlThread, args=("",))
+   			#t1.start()
+		#except:
+   			#print ("Error: unable to start thread")
+
 
 	# checking the ip address
 	def checkIP(self, text):
@@ -89,6 +65,4 @@ class loginApp(MDApp):
 # entry point 
 if __name__ == '__main__':
 
-    loginApp().run()
-
-
+    UAVApp().run()
