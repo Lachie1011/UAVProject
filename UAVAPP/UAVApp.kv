@@ -1,3 +1,5 @@
+#:import MapView kivy.garden.mapview.MapView
+
 
 WindowManager:
 	LoginWindow:
@@ -63,8 +65,20 @@ WindowManager:
 
 		md_bg_color: 0.157,0.155,0.156,0.8
 
-		pos_hint: {'center_x': 0.28, 'center_y': 0.55}
-		size_hint: 0.4, 0.7
+		size_hint: 0.44, 0.62
+
+		pos_hint: {'center_x': 0.25, 'center_y': 0.60}
+
+
+    MDLabel:
+
+		id: borderMap
+
+		md_bg_color: 0.157,0.155,0.156,0.8
+
+		size_hint: 0.44, 0.62
+
+		pos_hint: {'center_x': 0.75, 'center_y': 0.60}
 
 	Image:
 
@@ -75,5 +89,17 @@ WindowManager:
 		
 		source: "images/noSignal.jpg"
 
-		pos_hint: {'center_x': 0.28, 'center_y': 0.55}
+		pos_hint: {'center_x': 0.25, 'center_y': 0.60}
+
+	MapView:
+
+		zoom: 15
+
+		lat: -27.48037
+		lon: 153.04645
+
+		size_hint: 0.43, 0.6
+
+		pos_hint: {'center_x': 0.75, 'center_y': 0.60}
+
  	
