@@ -29,6 +29,7 @@ WindowManager:
 
         size_hint: None, None
         size: dp(20), dp(20)
+
         pos_hint: {'center_x': .5, 'center_y': .45}
         
         active: False
@@ -37,11 +38,10 @@ WindowManager:
 
     	id: timeLbl
 
-    	text: "I am here"
+    	text: ""
 		theme_text_color: "Hint"
-		font_size: ipAddress.font_size
 
-		pos_hint: {'center_x': 0.52, 'center_y': 0.95}
+		pos_hint: {'center_x': 0.52, 'center_y': 0.97}
 
 
 <MainWindow>
@@ -52,13 +52,28 @@ WindowManager:
 
     	id: timeLbl
 
-    	text: "I am here"
+    	text: ""
 		theme_text_color: "Hint"
 
-		pos_hint: {'center_x': 0.52, 'center_y': 0.95}
+		pos_hint: {'center_x': 0.52, 'center_y': 0.97}
+
+    MDLabel:
+
+		id: borderCamera
+
+		md_bg_color: 0.157,0.155,0.156,0.8
+
+		pos_hint: {'center_x': 0.28, 'center_y': 0.55}
+		size_hint: 0.4, 0.7
 
 	Image:
 
 		id: imageFrame
+
+		size_hint: 0.6, 0.6
+		allow_stretch: True
 		
 		source: "images/noSignal.jpg"
+
+		pos_hint: {'center_x': 0.28, 'center_y': 0.55}
+ 	

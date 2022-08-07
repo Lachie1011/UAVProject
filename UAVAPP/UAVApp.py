@@ -17,7 +17,9 @@ from datetime import datetime
 from kivymd.app import MDApp
 from kivy.clock import Clock
 from kivy.lang import Builder
+from kivy.config import Config
 from kivy.uix.image import Image
+from kivy.core.window import Window
 from kivy.graphics.texture import Texture
 from kivy.uix.screenmanager import ScreenManager, Screen 
 
@@ -48,6 +50,9 @@ class UAVApp(MDApp):
 	# current frame
 	currentFrame = windows.loginWindow.name
 
+	# window configuration 
+	Window.maximize()
+
 	# builds the application
 	def build(self):
 		
@@ -59,13 +64,12 @@ class UAVApp(MDApp):
 		self.capture = cv2.VideoCapture(0)
 
 		# scheduling image clock
-		Clock.schedule_interval(self.frame_capture, 1/30.0)
+		Clock.schedule_interval(self.frame_capture, 1/60)
 
 		# scheduling time clock
 		Clock.schedule_interval(self.time_function, 1)	
 
 		return Builder.load_file('UAVApp.kv') 
-
 
 	# a function to capture frames from the receiver
 	def frame_capture(self, dt):
@@ -73,19 +77,21 @@ class UAVApp(MDApp):
 		if(self.currentFrame == windows.mainWindow.name):
 
 			# get frame
-			ret, frame = self.capture.read()
+			ret, self.frame = self.capture.read()
 
 			if(ret):
+				self.root.screens[windows.mainWindow.value].ids['imageFrame'].texture = self.getTextureFromFrame(self.frame, 0) # update texture
 
-				bufferFrame = cv2.flip(frame, 0)	
-				bufferFrameStr = bufferFrame.tostring()
+	# this function get the texture for the image
+	def getTextureFromFrame(self, frame, flipped):
 
-				imageTexture = Texture.create(size = (frame.shape[1], frame.shape[0]), colorfmt = 'bgr')
-				imageTexture.blit_buffer(bufferFrameStr, colorfmt = 'bgr', bufferfmt = 'ubyte')
-
-				self.root.screens[windows.mainWindow.value].ids['imageFrame'].texture = imageTexture # update texture
-
-				print(self.root.screens[windows.mainWindow.value].ids['imageFrame'].texture) # = imageTexture # update texture
+		bufferFrame = cv2.flip(frame, flipped)
+		bufferFrameStr = bufferFrame.tostring()
+		
+		imageTexture = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
+		imageTexture.blit_buffer(bufferFrameStr, colorfmt='bgr', bufferfmt='ubyte')
+		
+		return imageTexture
 
 	# a function to update the time label
 	def time_function(self, dt):
@@ -97,6 +103,14 @@ class UAVApp(MDApp):
 
 			#self.root.ids.timeLbl.text = current_time
 			self.root.screens[windows.loginWindow.value].ids.timeLbl.text = current_time # todo: make this an enum 
+
+		if(self.currentFrame == windows.mainWindow.name):
+			now = datetime.now()
+
+			current_time = now.strftime("%H:%M:%S")
+
+			#self.root.ids.timeLbl.text = current_time
+			self.root.screens[windows.mainWindow.value].ids.timeLbl.text = current_time # todo: make this an enum 
 
 	# ADC threading
 	def controlThread(self, name):
@@ -123,7 +137,7 @@ class UAVApp(MDApp):
 		#except:
    		#	print ("Error: unable to start thread")
 		
-		self.root.switch_to(self.root.screens[windows.mainWindow.value])
+		self.root.current = "Main"
 		self.currentFrame = windows.mainWindow.name
 
 	# checking the ip address
