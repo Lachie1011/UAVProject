@@ -46,6 +46,16 @@ WindowManager:
 		pos_hint: {'center_x': 0.52, 'center_y': 0.97}
 
 
+    MDLabel:
+
+    	id: versionLbl
+
+    	text: "0.1"
+		theme_text_color: "Hint"
+
+		pos_hint: {'center_x': 0.52, 'center_y': 0.05}
+
+
 <MainWindow>
 
 	name: "Main"
@@ -70,7 +80,7 @@ WindowManager:
 		pos_hint: {'center_x': 0.25, 'center_y': 0.60}
 
 
-    MDLabel:
+	MDLabel:
 
 		id: borderMap
 
@@ -79,6 +89,16 @@ WindowManager:
 		size_hint: 0.44, 0.62
 
 		pos_hint: {'center_x': 0.75, 'center_y': 0.60}
+
+	MDLabel:
+
+		id: borderInstruments
+
+		md_bg_color: 0.157,0.155,0.156,0.8
+
+		size_hint: 0.60, 0.25
+
+		pos_hint: {'center_x': 0.50, 'center_y': 0.15}
 
 	Image:
 
@@ -101,5 +121,7 @@ WindowManager:
 		size_hint: 0.43, 0.6
 
 		pos_hint: {'center_x': 0.75, 'center_y': 0.60}
+
+	
 
  	
