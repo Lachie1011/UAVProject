@@ -13,7 +13,7 @@ WindowManager:
 		
 		id: ipAddress
 
-		hint_text: "drone ip"
+		hint_text: "uav ip"
 
 		size_hint_x: None
 		size_hint_y: None
@@ -73,9 +73,9 @@ WindowManager:
 
 		id: borderCamera
 
-		md_bg_color: 0.157,0.155,0.156,0.8
+		md_bg_color: 219/255, 182/255, 67/255, 1
 
-		size_hint: 0.44, 0.62
+		size_hint: 0.435, 0.61
 
 		pos_hint: {'center_x': 0.25, 'center_y': 0.60}
 
@@ -84,21 +84,13 @@ WindowManager:
 
 		id: borderMap
 
-		md_bg_color: 0.157,0.155,0.156,0.8
+		md_bg_color: 219/255, 182/255, 67/255, 1
 
-		size_hint: 0.44, 0.62
+		size_hint: 0.435, 0.61
 
 		pos_hint: {'center_x': 0.75, 'center_y': 0.60}
 
-	MDLabel:
 
-		id: borderInstruments
-
-		md_bg_color: 0.157,0.155,0.156,0.8
-
-		size_hint: 0.94, 0.25
-
-		pos_hint: {'center_x': 0.50, 'center_y': 0.15}
 
 	Image:
 
@@ -110,6 +102,73 @@ WindowManager:
 		source: "images/noSignal.jpg"
 
 		pos_hint: {'center_x': 0.25, 'center_y': 0.60}
+
+	MDLabel:
+
+    	id: uavNameLbl
+
+    	text: "UAV: "
+		theme_text_color: "Hint"
+
+		pos_hint: {'center_x': 0.57, 'center_y': 0.23}
+
+	MDLabel:
+
+    	id: uavSpeedLbl
+
+    	text: "Current Speed: "
+		theme_text_color: "Hint"
+
+		pos_hint: {'center_x': 0.57, 'center_y': 0.19}
+
+	MDLabel:
+
+    	id: uavHeadingLbl
+
+    	text: "Heading: "
+		theme_text_color: "Hint"
+
+		pos_hint: {'center_x': 0.57, 'center_y': 0.15}
+
+	MDLabel:
+
+    	id: uavAltitudeLbl
+
+    	text: "Altitude: "
+		theme_text_color: "Hint"
+
+		pos_hint: {'center_x': 0.57, 'center_y': 0.11}
+
+	MDLabel:
+
+    	id: uavLocationLbl
+
+    	text: "Location: "
+		theme_text_color: "Hint"
+
+		pos_hint: {'center_x': 0.57, 'center_y': 0.07}
+
+	Image:
+
+		id: imageJoytick
+
+		size_hint: 0.25, 0.25
+		allow_stretch: True
+		
+		source: "generatedImages/joystick.png"
+
+		pos_hint: {'center_x': 0.88, 'center_y': 0.15}
+	
+	Image:
+
+		id: imageThrottle
+
+		size_hint: 0.15, 0.25
+		allow_stretch: True
+		
+		source: "generatedImages/throttle.png"
+
+		pos_hint: {'center_x': 0.75, 'center_y': 0.15}
 
 	MapView:
 

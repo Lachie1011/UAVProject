@@ -26,7 +26,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 # module libraries 
 from Networking.GCSPublisher import GCSPublisher
 
-# Window Enum class
+# window Enum class
 class windows(Enum):
 	loginWindow = 0
 	mainWindow = 1
