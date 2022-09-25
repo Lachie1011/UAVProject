@@ -25,6 +25,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 
 # module libraries 
 from Networking.GCSPublisher import GCSPublisher
+from Networking.GCSImageGenerator import GCSImageGenerator
 
 # window Enum class
 class windows(Enum):
@@ -42,7 +43,6 @@ class MainWindow(Screen):
 # window manager
 class WindowManager(ScreenManager): 
 	pass
-
 
 # class - UAVApp
 class UAVApp(MDApp):
@@ -63,16 +63,19 @@ class UAVApp(MDApp):
 		# creating capture for imagery
 		self.capture = cv2.VideoCapture(0)
 
-		# scheduling image clock
-		Clock.schedule_interval(self.frame_capture, 1/60)
+		# scheduling camera capture
+		Clock.schedule_interval(self.frameCapture, 1/60)
+
+		# scheduling indicator updates
+		Clock.schedule_interval(self.indicatorUpdate, 1/60)
 
 		# scheduling time clock
-		Clock.schedule_interval(self.time_function, 1)	
+		Clock.schedule_interval(self.timeFunction, 1)	
 
 		return Builder.load_file('UAVApp.kv') 
 
 	# a function to capture frames from the receiver
-	def frame_capture(self, dt):
+	def frameCapture(self, dt):
 		
 		if(self.currentFrame == windows.mainWindow.name):
 
@@ -82,10 +85,31 @@ class UAVApp(MDApp):
 			if(ret):
 				self.root.screens[windows.mainWindow.value].ids['imageFrame'].texture = self.getTextureFromFrame(self.frame, 0) # update texture
 
+	# a function to capture frames from the receiver
+	def indicatorUpdate(self, dt):
+		
+		if(self.currentFrame == windows.mainWindow.name):
+
+			# reading in indicator images  
+			throttle = cv2.imread("generatedImages/throttle.png")
+			#joystick = cv2.imread("generatedImages/joystick.png")
+
+			# updating onscreen images 
+			retThrottle = self.getTextureFromFrame(throttle, 0) 
+
+			if(retThrottle != -1):
+				self.root.screens[windows.mainWindow.value].ids['imageThrottle'].texture = retThrottle
+			
+			#self.root.screens[windows.mainWindow.value].ids['imageJoystick'].texture = self.getTextureFromFrame(joystick, 0) 
+
 	# this function get the texture for the image
 	def getTextureFromFrame(self, frame, flipped):
 
 		bufferFrame = cv2.flip(frame, flipped)
+
+		if(bufferFrame is None):
+			return -1 
+
 		bufferFrameStr = bufferFrame.tostring()
 		
 		imageTexture = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
@@ -94,7 +118,7 @@ class UAVApp(MDApp):
 		return imageTexture
 
 	# a function to update the time label
-	def time_function(self, dt):
+	def timeFunction(self, dt):
 
 		if(self.currentFrame == windows.loginWindow.name):
 			now = datetime.now()
@@ -117,6 +141,12 @@ class UAVApp(MDApp):
 		# opening connection to drone
 		gcsPublisher = GCSPublisher(self.root.screens[windows.loginWindow.value].ids.ipAddress.text)
 
+	# image generator threading
+	def imageGenThread(self, name):
+		# opening connection to drone
+		indicatorUpdator = GCSImageGenerator("127.0.0.1")
+		indicatorUpdator.start()
+
 	# on ip text field validation
 	def	ip_validate(self, text):
 
@@ -128,15 +158,19 @@ class UAVApp(MDApp):
 			self.root.screens[windows.loginWindow.value].ids.spinnerIP.active = False
 			self.root.screens[windows.loginWindow.value].ids.ipAddress.text = ""
 			return
-		self.root.screens[windows.loginWindow.value].ids.spinnerIP.active = False
-
-		# Create thread for networking and control 
-		#try:
-   		#	t1 = threading.Thread(target=self.controlThread, args=("",))
-   		#	t1.start()
-		#except:
-   		#	print ("Error: unable to start thread")
 		
+		self.root.screens[windows.loginWindow.value].ids.spinnerIP.active = False
+		
+		# Create thread for networking and control 
+		try:
+			indicatorThread = threading.Thread(target=self.imageGenThread, args=("",))
+			indicatorThread.start()
+
+			controlThread = threading.Thread(target=self.controlThread, args=("",))
+			controlThread.start()
+		except:
+			print ("Error: unable to start thread")
+
 		self.root.current = "Main"
 		self.currentFrame = windows.mainWindow.name
 

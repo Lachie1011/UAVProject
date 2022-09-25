@@ -46,10 +46,10 @@ class GCSPublisher:
             # publish ADC data
             publish.multiple(controlMsgs, hostname = self.host)            
 
-# Main 
-def Main():
-    gcsPublisher = GCSPublisher()
+# Main entry 
+def main():
+    gcsPublisher = GCSPublisher("127.0.0.1")
 
 if __name__ == '__main__':
-    Main()
+    main()
 
