@@ -1,6 +1,5 @@
 #:import MapView kivy.garden.mapview.MapView
 
-
 WindowManager:
 	LoginWindow:
 	MainWindow: 
@@ -60,6 +59,17 @@ WindowManager:
 
 	name: "Main"
 
+	MapView:
+
+		id: map
+		
+		zoom: 15
+		lat: -27.48037
+		lon: 153.04645
+
+		size_hint: 1, 1
+		pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
     MDLabel:
 
     	id: timeLbl
@@ -76,7 +86,7 @@ WindowManager:
     	text: "Mission: "
 		theme_text_color: "Hint"
 
-		pos_hint: {'center_x': 0.57, 'center_y': 0.23}
+		pos_hint: {'center_x': 0.52, 'center_y': 0.23}
 
 	MDLabel:
 
@@ -85,7 +95,7 @@ WindowManager:
     	text: "Start: "
 		theme_text_color: "Hint"
 
-		pos_hint: {'center_x': 0.57, 'center_y': 0.19}
+		pos_hint: {'center_x': 0.52, 'center_y': 0.19}
 
 	MDLabel:
 
@@ -94,7 +104,7 @@ WindowManager:
     	text: "Start Location: "
 		theme_text_color: "Hint"
 
-		pos_hint: {'center_x': 0.57, 'center_y': 0.15}
+		pos_hint: {'center_x': 0.52, 'center_y': 0.15}
 
 	MDLabel:
 
@@ -103,7 +113,7 @@ WindowManager:
     	text: "Duration: "
 		theme_text_color: "Hint"
 
-		pos_hint: {'center_x': 0.57, 'center_y': 0.11}
+		pos_hint: {'center_x': 0.52, 'center_y': 0.11}
 
 	MDLabel:
 
@@ -112,20 +122,4 @@ WindowManager:
     	text: "Operational Distance: "
 		theme_text_color: "Hint"
 
-		pos_hint: {'center_x': 0.57, 'center_y': 0.07}
-
-	MapView:
-
-		id: map
-		
-		zoom: 15
-
-		lat: -27.48037
-		lon: 153.04645
-
-		size_hint: 0.9, 0.65
-
-		pos_hint: {'center_x': 0.5, 'center_y': 0.6}
-			
-
- 	
+		pos_hint: {'center_x': 0.52, 'center_y': 0.07}	

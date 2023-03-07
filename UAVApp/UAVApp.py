@@ -81,7 +81,7 @@ class UAVApp(MDApp):
 	def	mission_validate(self, text):
 		self.root.screens[windows.loginWindow.value].ids.spinner.active = True
 
-		validMission = self.setup_mission("missions/" + text + ".yaml")
+		validMission = self.setup_manager("missions/" + text + ".yaml")
 		if(not validMission):
 			self.root.screens[windows.loginWindow.value].ids.spinner.active = False
 			self.root.screens[windows.loginWindow.value].ids.missionTxt.text = ""
@@ -95,7 +95,7 @@ class UAVApp(MDApp):
 		self.currentFrame = windows.mainWindow.name
 
 	# gets mission and sets up mission screen
-	def setup_mission(self, missionPath): 
+	def setup_manager(self, missionPath): 
 		# mission file
 		with open(missionPath, "r") as stream:
 			try:
@@ -112,11 +112,20 @@ class UAVApp(MDApp):
 		self.root.screens[windows.mainWindow.value].ids.missionOperation.text += str(self.mission["operational_distance"]) + "km"
 
 		# updating map to darkmode
-		source = MapSource(url="http://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
-                   cache_key="darkmap", tile_size=512,
-                   image_ext="png", attribution="Darkmap")
-		
-		self.root.screens[windows.mainWindow.value].ids.map.map_source = source
+		if self.mission["darkmode"]:
+			source = MapSource(url="http://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
+					cache_key="darkmap", tile_size=512,
+					image_ext="png", attribution="Darkmap")
+					
+			self.root.screens[windows.mainWindow.value].ids.map.map_source = source
+
+			# TODO: update this to take in all different maps offered by mapview
+			# TODO: if not darkmode should update text label text colour
+
+		# preloading maps
+		if self.mission["preload_map"]:
+			pass
+			# TODO: figure out how to make api calls around the area and for all zooms? 
 
 		return True
 
