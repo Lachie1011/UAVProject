@@ -112,7 +112,7 @@ class UAVApp(MDApp):
 		self.root.screens[windows.mainWindow.value].ids.missionOperation.text += str(self.mission["operational_distance"]) + "km"
 
 		# updating map to darkmode
-		source = MapSource(url="http://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
+		source = MapSource(url="http://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
                    cache_key="darkmap", tile_size=512,
                    image_ext="png", attribution="Darkmap")
 		
