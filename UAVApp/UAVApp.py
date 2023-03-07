@@ -18,6 +18,7 @@ from kivy.uix.image import Image
 from kivy.core.window import Window
 from kivy.graphics.texture import Texture
 from kivy.uix.screenmanager import ScreenManager, Screen 
+from kivy.garden.mapview import MapSource
 
 # window Enum class
 class windows(Enum):
@@ -109,6 +110,13 @@ class UAVApp(MDApp):
 		self.root.screens[windows.mainWindow.value].ids.missionLocation.text += str(self.mission["mission_start_location"])
 		self.root.screens[windows.mainWindow.value].ids.missionDuration.text += str(self.mission["mission_duration"]) + "mins"
 		self.root.screens[windows.mainWindow.value].ids.missionOperation.text += str(self.mission["operational_distance"]) + "km"
+
+		# updating map to darkmode
+		source = MapSource(url="http://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
+                   cache_key="darkmap", tile_size=512,
+                   image_ext="png", attribution="Darkmap")
+		
+		self.root.screens[windows.mainWindow.value].ids.map.map_source = source
 
 		return True
 
