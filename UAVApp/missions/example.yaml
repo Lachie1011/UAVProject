@@ -1,0 +1,24 @@
+### This is an example mission file to help inform your own applications ###
+
+# mission Data
+mission: example                                 # mission name
+mission_start: 0800                              # start time
+mission_date: 01/01/2000                         # start date
+mission_duration: 120                            # mission duration in mins
+mission_start_location: 27.4705° S, 153.0260° E  # mission start location lat and long
+operational_distance: 80                         # operational distance radius in km 
+preload_map: True                                # option to preload maps
+
+# server data - the server manager is started on this address
+ip_address: 127.0.0.1
+port: 8050
+
+# UAV data
+UAVs:
+  -
+    company: example UAVs 
+    number_of_UAVs: 3
+    uavs:
+      - {callsign: alpha1}
+      - {callsign: alpha2}
+      - {callsign: alpha3}

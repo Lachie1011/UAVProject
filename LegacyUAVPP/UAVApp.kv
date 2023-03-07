@@ -1,0 +1,183 @@
+#:import MapView kivy.garden.mapview.MapView
+
+
+WindowManager:
+	LoginWindow:
+	MainWindow: 
+
+
+<LoginWindow>:
+	name: "Login"
+
+	MDTextField:
+		
+		id: ipAddress
+
+		hint_text: "uav ip"
+
+		size_hint_x: None
+		size_hint_y: None
+
+		height: 30
+		width: 200
+		pos_hint: {"center_x": .5, "center_y": .55}
+
+		on_text_validate: app.ip_validate(ipAddress.text)
+
+
+	MDSpinner:
+
+		id: spinnerIP
+
+        size_hint: None, None
+        size: dp(20), dp(20)
+
+        pos_hint: {'center_x': .5, 'center_y': .45}
+        
+        active: False
+
+    MDLabel:
+
+    	id: timeLbl
+
+    	text: ""
+		theme_text_color: "Hint"
+
+		pos_hint: {'center_x': 0.52, 'center_y': 0.97}
+
+
+    MDLabel:
+
+    	id: versionLbl
+
+    	text: "0.1"
+		theme_text_color: "Hint"
+
+		pos_hint: {'center_x': 0.52, 'center_y': 0.05}
+
+
+<MainWindow>
+
+	name: "Main"
+
+    MDLabel:
+
+    	id: timeLbl
+
+    	text: ""
+		theme_text_color: "Hint"
+
+		pos_hint: {'center_x': 0.52, 'center_y': 0.97}
+
+    MDLabel:
+
+		id: borderCamera
+
+		md_bg_color: 219/255, 182/255, 67/255, 1
+
+		size_hint: 0.435, 0.61
+
+		pos_hint: {'center_x': 0.25, 'center_y': 0.60}
+
+	MDLabel:
+
+		id: borderMap
+
+		md_bg_color: 219/255, 182/255, 67/255, 1
+
+		size_hint: 0.435, 0.61
+
+		pos_hint: {'center_x': 0.75, 'center_y': 0.60}
+
+	Image:
+
+		id: imageFrame
+
+		size_hint: 0.43, 0.6
+		allow_stretch: True
+		
+		source: "images/noSignal.jpg"
+
+		pos_hint: {'center_x': 0.25, 'center_y': 0.60}
+
+	MDLabel:
+
+    	id: uavNameLbl
+
+    	text: "UAV: "
+		theme_text_color: "Hint"
+
+		pos_hint: {'center_x': 0.57, 'center_y': 0.23}
+
+	MDLabel:
+
+    	id: uavSpeedLbl
+
+    	text: "Current Speed: "
+		theme_text_color: "Hint"
+
+		pos_hint: {'center_x': 0.57, 'center_y': 0.19}
+
+	MDLabel:
+
+    	id: uavHeadingLbl
+
+    	text: "Heading: "
+		theme_text_color: "Hint"
+
+		pos_hint: {'center_x': 0.57, 'center_y': 0.15}
+
+	MDLabel:
+
+    	id: uavAltitudeLbl
+
+    	text: "Altitude: "
+		theme_text_color: "Hint"
+
+		pos_hint: {'center_x': 0.57, 'center_y': 0.11}
+
+	MDLabel:
+
+    	id: uavLocationLbl
+
+    	text: "Location: "
+		theme_text_color: "Hint"
+
+		pos_hint: {'center_x': 0.57, 'center_y': 0.07}
+
+	Image:
+
+		id: imageJoystick
+
+		size_hint: 0.25, 0.25
+		allow_stretch: True
+		
+		source: "generatedImages/joystick.png"
+
+		pos_hint: {'center_x': 0.88, 'center_y': 0.15}
+	
+	Image:
+
+		id: imageThrottle
+
+		size_hint: 0.15, 0.25
+		allow_stretch: True
+		
+		source: "generatedImages/baseThrottle.png"
+
+		pos_hint: {'center_x': 0.75, 'center_y': 0.15}
+
+	MapView:
+
+		zoom: 15
+
+		lat: -27.48037
+		lon: 153.04645
+
+		size_hint: 0.43, 0.6
+
+		pos_hint: {'center_x': 0.75, 'center_y': 0.60}
+
+	
+
+ 	

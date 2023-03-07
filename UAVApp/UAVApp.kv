@@ -11,9 +11,9 @@ WindowManager:
 
 	MDTextField:
 		
-		id: ipAddress
+		id: missionTxt
 
-		hint_text: "uav ip"
+		hint_text: "mission"
 
 		size_hint_x: None
 		size_hint_y: None
@@ -22,12 +22,12 @@ WindowManager:
 		width: 200
 		pos_hint: {"center_x": .5, "center_y": .55}
 
-		on_text_validate: app.ip_validate(ipAddress.text)
+		on_text_validate: app.mission_validate(missionTxt.text)
 
 
 	MDSpinner:
 
-		id: spinnerIP
+		id: spinner
 
         size_hint: None, None
         size: dp(20), dp(20)
@@ -69,17 +69,6 @@ WindowManager:
 
 		pos_hint: {'center_x': 0.52, 'center_y': 0.97}
 
-    MDLabel:
-
-		id: borderCamera
-
-		md_bg_color: 219/255, 182/255, 67/255, 1
-
-		size_hint: 0.435, 0.61
-
-		pos_hint: {'center_x': 0.25, 'center_y': 0.60}
-
-
 	MDLabel:
 
 		id: borderMap
@@ -90,85 +79,50 @@ WindowManager:
 
 		pos_hint: {'center_x': 0.75, 'center_y': 0.60}
 
-
-
-	Image:
-
-		id: imageFrame
-
-		size_hint: 0.6, 0.6
-		allow_stretch: True
-		
-		source: "images/noSignal.jpg"
-
-		pos_hint: {'center_x': 0.25, 'center_y': 0.60}
-
 	MDLabel:
 
-    	id: uavNameLbl
+    	id: missionNameLbl
 
-    	text: "UAV: "
+    	text: "Mission: "
 		theme_text_color: "Hint"
 
 		pos_hint: {'center_x': 0.57, 'center_y': 0.23}
 
 	MDLabel:
 
-    	id: uavSpeedLbl
+    	id: missionStart
 
-    	text: "Current Speed: "
+    	text: "Start: "
 		theme_text_color: "Hint"
 
 		pos_hint: {'center_x': 0.57, 'center_y': 0.19}
 
 	MDLabel:
 
-    	id: uavHeadingLbl
+    	id: missionLocation
 
-    	text: "Heading: "
+    	text: "Start Location: "
 		theme_text_color: "Hint"
 
 		pos_hint: {'center_x': 0.57, 'center_y': 0.15}
 
 	MDLabel:
 
-    	id: uavAltitudeLbl
+    	id: missionDuration
 
-    	text: "Altitude: "
+    	text: "Duration: "
 		theme_text_color: "Hint"
 
 		pos_hint: {'center_x': 0.57, 'center_y': 0.11}
 
 	MDLabel:
 
-    	id: uavLocationLbl
+    	id: missionOperation
 
-    	text: "Location: "
+    	text: "Operational Distance: "
 		theme_text_color: "Hint"
 
 		pos_hint: {'center_x': 0.57, 'center_y': 0.07}
-
-	Image:
-
-		id: imageJoystick
-
-		size_hint: 0.25, 0.25
-		allow_stretch: True
-		
-		source: "generatedImages/joystick.png"
-
-		pos_hint: {'center_x': 0.88, 'center_y': 0.15}
-	
-	Image:
-
-		id: imageThrottle
-
-		size_hint: 0.15, 0.25
-		allow_stretch: True
-		
-		source: "generatedImages/baseThrottle.png"
-
-		pos_hint: {'center_x': 0.75, 'center_y': 0.15}
 
 	MapView:
 
