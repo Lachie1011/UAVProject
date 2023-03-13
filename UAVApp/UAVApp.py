@@ -18,7 +18,7 @@ from kivy.uix.image import Image
 from kivy.core.window import Window
 from kivy.graphics.texture import Texture
 from kivy.uix.screenmanager import ScreenManager, Screen 
-from kivy.garden.mapview import MapSource
+from kivy.garden.mapview import MapSource, MapMarker
 
 # window Enum class
 class windows(Enum):
@@ -107,7 +107,7 @@ class UAVApp(MDApp):
 		# update mission values
 		self.root.screens[windows.mainWindow.value].ids.missionNameLbl.text += self.mission["mission"]
 		self.root.screens[windows.mainWindow.value].ids.missionStart.text += self.mission["mission_date"] + " at " + str(self.mission["mission_start"])
-		self.root.screens[windows.mainWindow.value].ids.missionLocation.text += str(self.mission["mission_start_location"])
+		self.root.screens[windows.mainWindow.value].ids.missionLocation.text += str(self.mission["mission_start_lat"]) + " " + str(self.mission["mission_start_long"]) 
 		self.root.screens[windows.mainWindow.value].ids.missionDuration.text += str(self.mission["mission_duration"]) + "mins"
 		self.root.screens[windows.mainWindow.value].ids.missionOperation.text += str(self.mission["operational_distance"]) + "km"
 
@@ -116,8 +116,10 @@ class UAVApp(MDApp):
 			source = MapSource(url="http://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
 					cache_key="darkmap", tile_size=512,
 					image_ext="png", attribution="Darkmap")
-					
 			self.root.screens[windows.mainWindow.value].ids.map.map_source = source
+
+			# recentering map - when the source changes it loses its initial lat and long 
+			self.root.screens[windows.mainWindow.value].ids.map.center_on(self.mission["mission_start_lat"], self.mission["mission_start_long"])
 
 			# TODO: update this to take in all different maps offered by mapview
 			# TODO: if not darkmode should update text label text colour
@@ -126,6 +128,18 @@ class UAVApp(MDApp):
 		if self.mission["preload_map"]:
 			pass
 			# TODO: figure out how to make api calls around the area and for all zooms? 
+
+		# load UAVs
+		for uav in range(self.mission["UAVs"][0]["number"]):
+			
+			# place UAV onto map
+			if self.mission["darkmode"]:
+				marker = MapMarker(lat = self.mission["mission_start_lat"], lon = self.mission["mission_start_long"], source = "images/uav_dark.png")
+			else:
+				marker = MapMarker(lat = self.mission["mission_start_lat"], lon = self.mission["mission_start_long"], source = "images/uav_light.png")
+			self.root.screens[windows.mainWindow.value].ids.map.add_marker(marker)
+
+			# load callsign information onto screen
 
 		return True
 

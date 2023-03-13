@@ -5,7 +5,8 @@ mission: example                                 # mission name
 mission_start: 0800                              # start time
 mission_date: 01/01/2000                         # start date
 mission_duration: 120                            # mission duration in mins
-mission_start_location: 27.4705° S, 153.0260° E  # mission start location lat and long
+mission_start_lat: -27.4705                      # mission start location lat
+mission_start_long: 153.0260                     # mission start location long
 operational_distance: 80                         # operational distance radius in km 
 
 # manager config
@@ -20,7 +21,7 @@ port: 8050
 UAVs:
   -
     company: example UAVs 
-    number_of_UAVs: 3
+    number: 3
     uavs:
       - {callsign: alpha1}
       - {callsign: alpha2}
