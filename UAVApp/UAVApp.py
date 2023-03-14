@@ -1,8 +1,9 @@
 #!/usr/bin/env python3.9
 
-# adding sub-modules
-import sys
-sys.path.append('../')
+"""
+    UAVApp.py
+    Is the main entry point for the UAV Application and sets up the app
+"""
 
 # auxillary libraries
 import yaml
@@ -19,6 +20,9 @@ from kivy.core.window import Window
 from kivy.graphics.texture import Texture
 from kivy.uix.screenmanager import ScreenManager, Screen 
 from kivy.garden.mapview import MapSource, MapMarker
+
+# adding app modules
+from mission import Mission
 
 # window Enum class
 class windows(Enum):
@@ -80,63 +84,60 @@ class UAVApp(MDApp):
 	# validates the mission file 
 	def	mission_validate(self, text):
 		self.root.screens[windows.loginWindow.value].ids.spinner.active = True
-
-		validMission = self.setup_manager("missions/" + text + ".yaml")
-		if(not validMission):
+		
+		# creating mission object
+		try:
+			self.mission = Mission("missions/" + text + ".yaml")
+		except Exception as exc:
 			self.root.screens[windows.loginWindow.value].ids.spinner.active = False
 			self.root.screens[windows.loginWindow.value].ids.missionTxt.text = ""
 			return
 		
-		self.root.screens[windows.loginWindow.value].ids.spinner.active = False
-		
-		# TODO: start manager server/ create manager server
+		# setup manager screen
+		if(self.configure_manager()):
 
-		self.root.current = "Main"
-		self.currentFrame = windows.mainWindow.name
-
-	# gets mission and sets up mission screen
-	def setup_manager(self, missionPath): 
-		# mission file
-		with open(missionPath, "r") as stream:
-			try:
-				self.mission = yaml.safe_load(stream)
-			except yaml.YAMLError as exc:
-				print(exc)
-				return False
+			self.root.screens[windows.loginWindow.value].ids.spinner.active = False
 			
-		# update mission values
-		self.root.screens[windows.mainWindow.value].ids.missionNameLbl.text += self.mission["mission"]
-		self.root.screens[windows.mainWindow.value].ids.missionStart.text += self.mission["mission_date"] + " at " + str(self.mission["mission_start"])
-		self.root.screens[windows.mainWindow.value].ids.missionLocation.text += str(self.mission["mission_start_lat"]) + " " + str(self.mission["mission_start_long"]) 
-		self.root.screens[windows.mainWindow.value].ids.missionDuration.text += str(self.mission["mission_duration"]) + "mins"
-		self.root.screens[windows.mainWindow.value].ids.missionOperation.text += str(self.mission["operational_distance"]) + "km"
+			# TODO: start manager server/ create manager server
 
-		# updating map to darkmode
-		if self.mission["darkmode"]:
+			self.root.current = "Main"
+			self.currentFrame = windows.mainWindow.name
+
+	# sets up manager screen
+	def configure_manager(self): 
+
+		# update mission values
+		self.root.screens[windows.mainWindow.value].ids.missionNameLbl.text += self.mission.name
+		self.root.screens[windows.mainWindow.value].ids.missionStart.text += self.mission.start
+		self.root.screens[windows.mainWindow.value].ids.missionLocation.text += self.mission.location 
+		self.root.screens[windows.mainWindow.value].ids.missionDuration.text += self.mission.duration
+		self.root.screens[windows.mainWindow.value].ids.missionOperation.text += self.mission.operation
+
+		# darkmode configuration
+		if self.mission.darkmode:
 			source = MapSource(url="http://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
 					cache_key="darkmap", tile_size=512,
 					image_ext="png", attribution="Darkmap")
 			self.root.screens[windows.mainWindow.value].ids.map.map_source = source
 
 			# recentering map - when the source changes it loses its initial lat and long 
-			self.root.screens[windows.mainWindow.value].ids.map.center_on(self.mission["mission_start_lat"], self.mission["mission_start_long"])
+			self.root.screens[windows.mainWindow.value].ids.map.center_on(self.mission.lat, self.mission.lon)
 
 			# TODO: update this to take in all different maps offered by mapview
 			# TODO: if not darkmode should update text label text colour
 
 		# preloading maps
-		if self.mission["preload_map"]:
-			pass
+		if self.mission.preloadMap:
 			# TODO: figure out how to make api calls around the area and for all zooms? 
+			pass
 
 		# load UAVs
-		for uav in range(self.mission["UAVs"][0]["number"]):
-			
+		for uav in range(self.mission.UAVNumber):
 			# place UAV onto map
-			if self.mission["darkmode"]:
-				marker = MapMarker(lat = self.mission["mission_start_lat"], lon = self.mission["mission_start_long"], source = "images/uav_dark.png")
+			if self.mission.darkmode:
+				marker = MapMarker(lat = self.mission.lat, lon = self.mission.lon, source = "images/uav_dark.png")
 			else:
-				marker = MapMarker(lat = self.mission["mission_start_lat"], lon = self.mission["mission_start_long"], source = "images/uav_light.png")
+				marker = MapMarker(lat = self.mission.lat, lon = self.mission.lon, source = "images/uav_light.png")
 			self.root.screens[windows.mainWindow.value].ids.map.add_marker(marker)
 
 			# load callsign information onto screen
