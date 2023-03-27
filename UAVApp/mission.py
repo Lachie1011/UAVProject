@@ -1,17 +1,16 @@
-#!/usr/bin/env python3.9
-
 """
     mission.py 
     Used to load and manage configuration for a mission
 """
 
-# auxillary libraries
 import yaml 
 
 class Mission():
-
+    """
+        creates and holds information relevant to the mission
+    """
     def __init__(self, path) -> None:
-        # members
+        # valid mission flag
         self.isValid = True
 
         # attempt to load in file
@@ -24,6 +23,7 @@ class Mission():
                 print(exc)
 
     def construct_mission(self, mission_file) -> None:
+        """ constructs the mission from yaml file"""
         # reading in mission values
         self.name = mission_file["mission"]
         self.start = mission_file["mission_date"] + " at " + str(mission_file["mission_start"])
@@ -41,3 +41,7 @@ class Mission():
         self.UAV_company = mission_file["UAVs"][0]["company"]
         self.UAVNumber = mission_file["UAVs"][0]["number"]
         self.UAVs = mission_file["UAVs"][0]["uavs"]
+    
+    def update_location(self) -> bool:
+        """ updates the current location for a UAV """
+        return True        

@@ -5,12 +5,10 @@
     Is the main entry point for the UAV Application and sets up the app
 """
 
-# auxillary libraries
-import yaml
+import threading
 from enum import Enum
 from datetime import datetime
 
-# kivy libraries
 from kivymd.app import MDApp
 from kivy.clock import Clock
 from kivy.lang import Builder
@@ -22,27 +20,30 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.garden.mapview import MapSource, MapMarker
 
 # adding app modules
+from server import Server
 from mission import Mission
 
-# window Enum class
 class windows(Enum):
+	""" window enums """
 	loginWindow = 0
 	mainWindow = 1
 
-# login window class
 class LoginWindow(Screen):
+	""" login window class """
 	pass
 
-# main window class
 class MainWindow(Screen):
+	""" main window class """
 	pass
 
-# window manager
 class WindowManager(ScreenManager): 
+	""" window manager """
 	pass
 
-# class - UAVApp
 class UAVApp(MDApp):
+	"""
+		logic for the main application
+	"""
 
 	# current frame
 	currentFrame = windows.loginWindow.name
@@ -50,9 +51,8 @@ class UAVApp(MDApp):
 	# window configuration 
 	Window.maximize()
 
-	# builds the application
-	def build(self):
-		
+	def build(self) -> any:
+		""" build the application """
 		# layout options
 		self.theme_cls.theme_style = "Dark"
 		self.theme_cls.primary_palette = "BlueGray"
@@ -62,9 +62,8 @@ class UAVApp(MDApp):
 
 		return Builder.load_file('UAVApp.kv') 
 
-	# a function to update the time label
-	def timeFunction(self, dt):
-
+	def timeFunction(self, dt) -> None:
+		""" function to updated the time label """
 		if(self.currentFrame == windows.loginWindow.name):
 			now = datetime.now()
 
@@ -81,8 +80,8 @@ class UAVApp(MDApp):
 			#self.root.ids.timeLbl.text = current_time
 			self.root.screens[windows.mainWindow.value].ids.timeLbl.text = current_time # todo: make this an enum 
 
-	# validates the mission file 
-	def	mission_validate(self, text):
+	def	mission_validate(self, text) -> None:
+		""" validates the mission file """
 		self.root.screens[windows.loginWindow.value].ids.spinner.active = True
 		
 		# creating mission object
@@ -98,14 +97,16 @@ class UAVApp(MDApp):
 
 			self.root.screens[windows.loginWindow.value].ids.spinner.active = False
 			
-			# TODO: start manager server/ create manager server
+			# creating the server to run in a thread
+			self.__server = Server(self.mission)
+			self.__server_thread = threading.Thread(target=self.thread_function)
+			self.__server_thread.start()  # TODO: figure out nice way to end server when app is closed, probs just a stop call to server on end func
 
 			self.root.current = "Main"
 			self.currentFrame = windows.mainWindow.name
 
-	# sets up manager screen
-	def configure_manager(self): 
-
+	def configure_manager(self) -> bool: 
+		""" sets up manager screen """
 		# update mission values
 		self.root.screens[windows.mainWindow.value].ids.missionNameLbl.text += self.mission.name
 		self.root.screens[windows.mainWindow.value].ids.missionStart.text += self.mission.start
@@ -140,9 +141,13 @@ class UAVApp(MDApp):
 				marker = MapMarker(lat = self.mission.lat, lon = self.mission.lon, source = "images/uav_light.png")
 			self.root.screens[windows.mainWindow.value].ids.map.add_marker(marker)
 
-			# load callsign information onto screen
+			# TODO: load callsign information onto screen
 
 		return True
+	
+	def thread_function(self):
+		""" thread function for server"""
+		self.__server.run()
 
 
 # entry point 

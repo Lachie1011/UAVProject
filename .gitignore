@@ -1,2 +1,4 @@
 # Ignoring Image Cache
 UAVApp/cache/
+
+*.pyc
