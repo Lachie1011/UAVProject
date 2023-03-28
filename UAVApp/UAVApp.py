@@ -51,6 +51,9 @@ class UAVApp(MDApp):
 	# window configuration 
 	Window.maximize()
 
+	def __init__(self) -> None:
+		super().__init__()
+
 	def build(self) -> any:
 		""" build the application """
 		# layout options
@@ -58,7 +61,10 @@ class UAVApp(MDApp):
 		self.theme_cls.primary_palette = "BlueGray"
 
 		# scheduling time clock
-		Clock.schedule_interval(self.timeFunction, 1)	
+		Clock.schedule_interval(self.timeFunction, 1)
+
+		# scheduling marker update
+		Clock.schedule_interval(self.marker_update, 1)
 
 		return Builder.load_file('UAVApp.kv') 
 
@@ -79,6 +85,29 @@ class UAVApp(MDApp):
 
 			#self.root.ids.timeLbl.text = current_time
 			self.root.screens[windows.mainWindow.value].ids.timeLbl.text = current_time # todo: make this an enum 
+
+	def marker_update(self, dt) -> None:
+		""" function that runs every second and updates markers """
+		# TODO: there might be a nicer or smarter way to do this
+		if(self.currentFrame == windows.mainWindow.name):
+			# remove existing markers
+			for marker in self.__markers:
+				# first remove existing markers
+				self.root.screens[windows.mainWindow.value].ids.map.remove_marker(marker)
+
+			self.__markers = []
+			
+			# update UAVs
+			for uav in self.mission.UAVs:
+				# place UAV onto map
+				# TODO: check if valid  lat and long first
+				if self.mission.darkmode:
+					marker = MapMarker(lat = uav["location"][0], lon = uav["location"][1], source = "images/uav_dark.png")
+					self.__markers.append(marker)
+				else:
+					marker = MapMarker(lat = uav["location"][0], lon = uav["location"][1], source = "images/uav_light.png")
+					self.__markers.append(marker)
+				self.root.screens[windows.mainWindow.value].ids.map.add_marker(marker)
 
 	def	mission_validate(self, text) -> None:
 		""" validates the mission file """
@@ -131,14 +160,18 @@ class UAVApp(MDApp):
 		if self.mission.preloadMap:
 			# TODO: figure out how to make api calls around the area and for all zooms? 
 			pass
+		
+		self.__markers = []
 
 		# load UAVs
 		for uav in range(self.mission.UAVNumber):
 			# place UAV onto map
 			if self.mission.darkmode:
 				marker = MapMarker(lat = self.mission.lat, lon = self.mission.lon, source = "images/uav_dark.png")
+				self.__markers.append(marker)
 			else:
 				marker = MapMarker(lat = self.mission.lat, lon = self.mission.lon, source = "images/uav_light.png")
+				self.__markers.append(marker)
 			self.root.screens[windows.mainWindow.value].ids.map.add_marker(marker)
 
 			# TODO: load callsign information onto screen

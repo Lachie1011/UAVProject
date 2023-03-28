@@ -23,6 +23,6 @@ UAVs:
     company: example UAVs 
     number: 3
     uavs:
-      - {callsign: alpha1, start_location: [-27.4705, 153.0260]}
-      - {callsign: alpha2, start_location: [-27.4705, 153.0260]}
-      - {callsign: alpha3, start_location: [-27.4705, 153.0260]}
+      - {callsign: alpha1, location: [-27.4705, 153.0260]}
+      - {callsign: alpha2, location: [-27.4705, 153.0260]}
+      - {callsign: alpha3, location: [-27.4705, 153.0260]}

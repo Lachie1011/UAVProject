@@ -3,7 +3,7 @@
     Runs the flask server for the application and outlines the routes
 """
 
-from flask import Flask, Response, jsonify
+from flask import Flask, Response, jsonify, request
  
 # flask app
 app = Flask(__name__)
@@ -26,21 +26,23 @@ class Server:
         data = {'data': ''}
         return jsonify(data), 200
 
-    @app.route('/update/location/', methods=['POST'])  # <callsign>@<lat><long>
+    @app.route('/update/location', methods=['POST'])
     def update_location() -> Response: 
         """ endpoint to update the location of a UAV """
         data = {'data': ''}
+
+        # getting args from url
+        callsign = request.form.get("callsign")
+        lat = request.form.get("lat")
+        long = request.form.get("long")
+
+        if callsign is None or lat is None or long is None:
+            return jsonify(data), 400
         
-        if mission.update_location():
+        if mission.update_location(callsign, lat, long):
             data = {'data': 'updated successfully'}
             return jsonify(data), 200
         return jsonify(data), 400
-
-
-    @app.route('/update/fuel/', methods=['POST'])  # <callsign>@<fuel>
-    def update_fuel() -> Response: 
-        """ endpoint to update the fuel of a UAV """
-        pass
 
     def run(self):
         app.run(port=self.__port)

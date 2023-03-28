@@ -42,6 +42,14 @@ class Mission():
         self.UAVNumber = mission_file["UAVs"][0]["number"]
         self.UAVs = mission_file["UAVs"][0]["uavs"]
     
-    def update_location(self) -> bool:
+    def update_location(self, callsign, lat, long) -> bool:
         """ updates the current location for a UAV """
-        return True        
+        if not (lat.isnumeric() and long.isnumeric()):
+            return False
+        
+        for i in range(len(self.UAVs)):
+            if self.UAVs[i]["callsign"] == callsign:
+                self.UAVs[i]["location"] = [float(lat), float(long)]
+                return True        
+        
+        return False
